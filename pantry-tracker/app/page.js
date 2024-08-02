@@ -3,9 +3,13 @@
 import {Box,Stack,Typography,Button, Modal,TextField} from '@mui/material'
 import { firestore } from '../firebase.js'
 import { collection, doc ,getDoc,query,setDoc,deleteDoc, getDocs} from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import SearchIcon from '@mui/icons-material/Search';
+import SortIcon from '@mui/icons-material/Sort';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+
 
 const style = {
   position: 'absolute',
@@ -25,7 +29,8 @@ const style = {
 
 export default function Home() {
   const [pantry, setPantry] = useState([])
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [open,setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -94,7 +99,7 @@ export default function Home() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+      <Box sx={style}>
           <Typography 
           id="modal-modal-title" 
           variant="h6" 
@@ -149,7 +154,37 @@ export default function Home() {
       spacing={2} 
       overflow={'auto'}
       >
-      {pantry.map(({name,count}) => (
+      <Box display="flex"p={3} justifyContent="space-between" alignItems="center" width="100%" mb={2}>
+      <TextField
+          variant="outlined"
+          placeholder="Search items"
+          
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <SearchIcon color="action" />
+            ),
+          }}
+        />
+    <Button
+    variant="outlined"
+    startIcon={<SortIcon />}
+    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+  >
+    Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+  </Button>
+</Box>
+      {pantry
+      .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .sort((a, b) => {
+        if (sortOrder === 'asc') {
+          return a.name.localeCompare(b.name);
+        } else {
+          return b.name.localeCompare(a.name);
+        }
+      })
+      .map(({name,count}) => (
           <Box 
           key = {name}
           width="100%"
