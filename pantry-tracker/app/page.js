@@ -4,6 +4,8 @@ import {Box,Stack,Typography,Button, Modal,TextField} from '@mui/material'
 import { firestore } from '../firebase.js'
 import { collection, doc ,getDoc,query,setDoc,deleteDoc, getDocs} from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const style = {
   position: 'absolute',
@@ -96,7 +98,7 @@ export default function Home() {
           <Typography 
           id="modal-modal-title" 
           variant="h6" 
-          component="h2">
+          component="h4">
             Add Item
           </Typography>
           <Stack width="100%" direction={'row'} spacing={2}>
@@ -127,14 +129,14 @@ export default function Home() {
     >Add</Button>
       <Box border={'1px solid #333'}>
         <Box width='800px' 
-        height='100px' 
+        height='120px' 
         bgcolor={'#ADD8E6'}
         display={'flex'}
         justifyContent={'center'}
         alignItems={'center'}
         >
         <Typography
-        variant={'h2'}
+        variant={'h3'}
         color={'#333'}
         textAlign={'center'}
         >
@@ -151,7 +153,7 @@ export default function Home() {
           <Box 
           key = {name}
           width="100%"
-          minHeight="150px"
+          minHeight="130px"
           display="flex"
           justifyContent="space-between"
           alignItems="center"
@@ -159,7 +161,7 @@ export default function Home() {
           paddingX={5}
           >
             <Typography
-            variant={"h3"}
+            variant={"h4"}
             color={'#333'}
             textAlign={'center'}
             
@@ -170,12 +172,20 @@ export default function Home() {
               }
             </Typography>
             <Typography
-            variant={"h3"} color={'#333'} textAlign={'center'}>
+            variant={"h5"} color={'#333'} textAlign={'center'}>
               quantity: {count}
             </Typography>
-            <Button variant='contained' onClick={() => removeItem(name)}>
-              Remove
-              </Button>
+            
+            <Box>
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Button variant='contained' onClick={() => addItem(name)}>
+                  <ArrowDropUpIcon />
+                </Button>
+                <Button variant='contained' onClick={() => removeItem(name)}>
+                  <ArrowDropDownIcon />
+                </Button>
+              </Box>
+            </Box>
             </Box>
         ))}
       </Stack>
